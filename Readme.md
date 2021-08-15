@@ -2,11 +2,27 @@
 
 | Server name | CPU | Memory | Operating system | IP address |
 | --------------- | --------------- | --------------- | --------------- |--------------- |
-| master1.dodonotdo.io | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.3 |
-| master2.dodonotdo.io | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.4 |
-| master3.dodonotdo.io | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.5 |
-| worker1.dodonotdo.io | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.6 |
-| worker2.dodonotdo.io | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.7 |
+| master1.dodonotdo.in | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.3 |
+| master2.dodonotdo.in | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.4 |
+| master3.dodonotdo.in | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.5 |
+| worker1.dodonotdo.in | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.6 |
+| worker2.dodonotdo.in | 2 CPU | 4GB RAM | Ubuntu 20+ | 10.0.0.7 |
+
+host entry
+
+```sh
+
+cat <<EOF >> /etc/hosts
+
+10.0.0.3 master1 master1.dodonotdo.in
+10.0.0.4 master2 master2.dodonotdo.in
+10.0.0.5 master3 master3.dodonotdo.in
+10.0.0.6 worker1 worker1.dodonotdo.in
+10.0.0.7 worker2 worker2.dodonotdo.in
+
+EOF
+
+```
 
 
 [Master node](https://kubernetes.io/docs/concepts/overview/components/#control-plane-components)
