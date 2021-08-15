@@ -82,9 +82,13 @@ cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes etcd-csr.json | cfssljson -bare etcd 
 
 ```
+
 Create the etcd systemd service (run all etcd nodes)
 
 ```sh
+# create the data and configuration directory
+sudo mkdir -p /etc/etcd/ssl /var/lib/etcd
+
 # user creation for etcd
 useradd -c "etcd user" -d /var/lib/etcd -s /bin/false etcd
 chown -R etcd:etcd /var/lib/etcd
@@ -101,10 +105,6 @@ VERION=3.5.0
 wget https://storage.googleapis.com/etcd/v$VERION/etcd-v$VERION-linux-amd64.tar.gz 
 tar -xvzf etcd-v$VERION-linux-amd64.tar.gz -C /tmp/
 sudo mv /tmp/etcd-v$VERION-linux-amd64/etcd* /usr/local/bin/
-
-# create the data and configuration directory
-
-sudo mkdir -p /etc/etcd/ssl /var/lib/etcd
 
 
 cat <<EOF > /etc/systemd/system/etcd.service
@@ -141,9 +141,42 @@ WantedBy=multi-user.target
 EOF
 ```
 
+copy the etcd certificates into all etcd hosts from master1
 
+```sh
 
+sudo scp -r /etc/etcd/ssl/*.pem root@master2.dodonotdo.in:/etc/etcd/ssl/
+sudo scp -r /etc/etcd/ssl/*.pem root@master3.dodonotdo.in:/etc/etcd/ssl/
 
+```
+
+*The above step is to configure in all master nodes, after that start etcd service one by one master nodes.*
+```sh
+
+systemctl daemon-reload
+systemctl enable etcd
+systemctl start etcd.service
+systemctl status  etcd.service
+systemctl restart etcd.service
+
+```
+etcdctl member list
+
+```sh
+
+etcdctl -w table member list
+
+```
+
+Leader elction process viewer
+
+```sh
+master1=master1.dodonotdo.in
+master2=master2.dodonotdo.in
+master3=master3.dodonotdo.in
+
+ETCDCTL_API=3 etcdctl -w table --cacert="/etc/etcd/ssl/ca.pem"  --cert="/etc/etcd/ssl/etcd.pem" --key="/etc/etcd/ssl/etcd-key.pem" --endpoints=$master1:2379,$master2:2379,$master3:2379 endpoint status
+```
 
 
 
