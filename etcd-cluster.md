@@ -10,7 +10,14 @@ sudo mv /tmp/etcd-v$VERION-linux-amd64/etcd* /usr/local/bin/
 
 Create the etcd data and configuration directory
 ```sh
+
 sudo mkdir -p /etc/etcd/ssl /var/lib/etcd
+
+```
+
+Install the packages
+```sh
+sudo apt install golang-cfssl -y
 ```
 
 Create the master and etcd certificates
@@ -82,3 +89,24 @@ cat <<EOF > /etc/etcd/ssl/etcd-csr.json
 }
 EOF
 ```
+
+```sh
+# certificate creation process
+
+cd /etc/etcd/ssl
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca 
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes etcd-csr.json | cfssljson -bare etcd 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
