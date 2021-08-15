@@ -18,7 +18,7 @@ Create the master and etcd certificates
 ```sh
 # This CONFIGURATION used for kubernetes
 
-cat <<EOF > ca-config.json
+cat <<EOF > /etc/etcd/ssl/ca-config.json
 {
   "signing": {
     "default": {
@@ -37,7 +37,7 @@ EOF
 
 ```sh
 # This CSR used for kubernetes
-cat <<EOF > ca-csr.json
+cat <<EOF > /etc/etcd/ssl/ca-csr.json
 {
   "CN": "kubernetes",
   "key": {
@@ -59,7 +59,7 @@ EOF
 
 ```sh
 # This CSR used for ETCD
-vim etcd-csr.json
+cat <<EOF > /etc/etcd/ssl/etcd-csr.json
 {
   "CN": "etcd",
   "hosts": [
@@ -74,11 +74,11 @@ vim etcd-csr.json
     {
       "C": "IN",
       "ST": "TN",
-      "L": "Chennai",
-      "O": "k8s",
-      "OU": "System"
+      "L": "CHE",
+      "O": "DDND",
+      "OU": "DDND"
     }
   ]
 }
-
+EOF
 ```
