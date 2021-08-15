@@ -90,16 +90,21 @@ cat <<EOF > /etc/etcd/ssl/etcd-csr.json
 EOF
 ```
 
-```sh
-# certificate creation process
+certificate creation process
 
+```sh
 cd /etc/etcd/ssl
 cfssl gencert -initca ca-csr.json | cfssljson -bare ca 
 cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes etcd-csr.json | cfssljson -bare etcd 
 
 ```
+user creation for etcd
 
-
+```sh
+useradd -c "etcd user" -d /var/lib/etcd -s /bin/false etcd
+chown -R etcd:etcd /var/lib/etcd
+chown -R etcd:etcd /etc/etcd/ssl
+```
 
 
 
